@@ -1,5 +1,5 @@
 {
-  "name": "wyrihaximus/psr-3-level-filter",
+  "name": "wyrihaximus/psr-3-filter",
   "description": "PSR-3 log level filter",
   "license": "MIT",
   "authors": [
@@ -22,12 +22,12 @@
   },
   "autoload": {
     "psr-4": {
-      "WyriHaximus\\PSR3\\KeywordFilter\\": "src/"
+      "WyriHaximus\\PSR3\\Filter\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "WyriHaximus\\Tests\\PSR3\\KeywordFilter\\": "tests/"
+      "WyriHaximus\\Tests\\PSR3\\Filter\\": "tests/"
     }
   },
   "config": {
