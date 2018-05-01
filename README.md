@@ -59,6 +59,16 @@ $filterredLogger->info('good'); // Will reach monolog
 $filterredLogger->info('evil'); // Won't reach monolog
 ```
 
+## Context Logger Prefix Filter ##
+
+Chops off everything before the last '] ', intended to be used with [`wyrihaximus/psr-3-context-logger`](https://github.com/WyriHaximus/php-psr-3-context-logger).
+
+```php
+$monolog = new Monolog(); // Any PSR-3 logger
+$filterredLogger = new ContextLoggerPrefixFilterLogger($monolog);
+$filterredLogger->info('bad', '[HttpServer] [Request] something gone wrong'); // Will reach monolog as: something gone wrong
+```
+
 ## Contributing ##
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
