@@ -1,25 +1,23 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WyriHaximus\PSR3\Filter;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
+use function in_array;
+
 final class LogLevelFilterLogger extends AbstractLogger
 {
-    /**
-     * @var array
-     */
-    private $levels;
+    /** @var array<string> */
+    private array $levels;
+
+    private LoggerInterface $logger;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @param array           $levels
-     * @param LoggerInterface $logger
+     * @param array<string> $levels
      */
     public function __construct(array $levels, LoggerInterface $logger)
     {
@@ -27,7 +25,11 @@ final class LogLevelFilterLogger extends AbstractLogger
         $this->logger = $logger;
     }
 
-    public function log($level, $message, array $context = [])
+    /**
+     * @inheritDoc
+     * @phpstan-ignore-next-line
+     */
+    public function log($level, $message, array $context = []): void
     {
         if (in_array($level, $this->levels, true)) {
             return;

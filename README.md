@@ -12,7 +12,7 @@
 To install via [Composer](http://getcomposer.org/), use the command below, it will automatically detect the latest version and bind it with `^`.
 
 ```
-composer require wyrihaximus/psr-3-filter 
+composer require wyrihaximus/psr-3-filter
 ```
 
 ## Context Filter ##
@@ -42,7 +42,7 @@ $filterredLogger->info('evil', [
 
 ```php
 $monolog = new Monolog(); // Any PSR-3 logger
-$filterredLogger = new LogLevelFilterLogger(['error, $monolog);
+$filterredLogger = new LogLevelFilterLogger(['error'], $monolog);
 $filterredLogger->error('bad'); // Won't reach monolog
 $filterredLogger->info('good'); // Will reach monolog
 $filterredLogger->error('evil'); // Won't reach monolog
@@ -75,7 +75,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## License ##
 
-Copyright 2018 [Cees-Jan Kiewiet](http://wyrihaximus.net/)
+Copyright 2022 [Cees-Jan Kiewiet](https://wyrihaximus.net/)
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

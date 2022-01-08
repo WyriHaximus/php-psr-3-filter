@@ -1,48 +1,46 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WyriHaximus\PSR3\Filter;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
+
+use function explode;
 use function igorw\get_in;
+use function in_array;
 
 final class ContextFilterLogger extends AbstractLogger
 {
-    /**
-     * @var array
-     */
-    private $field;
+    /** @var array<string> */
+    private array $field;
+
+    /** @var array<mixed> */
+    private array $values;
+
+    private LoggerInterface $logger;
+
+    private bool $exclude;
 
     /**
-     * @var array
-     */
-    private $values;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var bool
-     */
-    private $exclude;
-
-    /**
-     * @param string          $field
-     * @param array           $values
-     * @param LoggerInterface $logger
-     * @param bool            $exclude
+     * @param array<mixed> $values
+     *
+     * @phpstan-ignore-next-line
      */
     public function __construct(string $field, array $values, LoggerInterface $logger, bool $exclude = true)
     {
-        $this->field = explode('.', $field);
-        $this->values = $values;
-        $this->logger = $logger;
+        $this->field   = explode('.', $field);
+        $this->values  = $values;
+        $this->logger  = $logger;
         $this->exclude = $exclude;
     }
 
-    public function log($level, $message, array $context = [])
+    /**
+     * @inheritDoc
+     * @phpstan-ignore-next-line
+     */
+    public function log($level, $message, array $context = []): void
     {
         $value = get_in($context, $this->field);
         if ($value !== null && in_array($value, $this->values, true) === $this->exclude) {
