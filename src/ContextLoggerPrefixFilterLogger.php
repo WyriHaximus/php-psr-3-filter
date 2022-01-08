@@ -1,33 +1,40 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WyriHaximus\PSR3\Filter;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
+use function Safe\substr;
+use function strrpos;
+use function trim;
+
+use const WyriHaximus\Constants\Numeric\ONE;
+
 final class ContextLoggerPrefixFilterLogger extends AbstractLogger
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    public function log($level, $message, array $context = [])
+    /**
+     * @inheritDoc
+     * @phpstan-ignore-next-line
+     */
+    public function log($level, $message, array $context = []): void
     {
-        $message = (string)$message;
-        $pos = strrpos($message, ']');
+        $message = (string) $message;
+        $pos     = strrpos($message, ']');
         if ($pos !== false) {
-            $message = substr($message, $pos + 1);
+            $message = substr($message, $pos + ONE);
             $message = trim($message);
         }
+
         $this->logger->log($level, $message, $context);
     }
 }
