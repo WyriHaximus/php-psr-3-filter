@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace WyriHaximus\Tests\PSR3\Filter;
 
+use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 use WyriHaximus\PSR3\Filter\ContextLoggerPrefixFilterLogger;
 use WyriHaximus\TestUtilities\TestCase;
 
 final class ContextLoggerPrefixFilterLoggerTest extends TestCase
 {
-    public function testRemovedContext(): void
+    #[Test]
+    public function removedContext(): void
     {
-        $logger = $this->prophesize(LoggerInterface::class);
-        $logger->log('info', 'faa bor', [])->shouldBeCalled();
-        $logger->log('info', 'sub ponfar', [])->shouldBeCalled();
+        $logger = Mockery::mock(LoggerInterface::class);
+        $logger->expects('log')->with('info', 'faa bor', [])->atLeast()->once();
+        $logger->expects('log')->with('info', 'sub ponfar', [])->atLeast()->once();
 
-        $filter = new ContextLoggerPrefixFilterLogger($logger->reveal());
+        $filter = new ContextLoggerPrefixFilterLogger($logger);
         $filter->log('info', '[Context] faa bor');
         $filter->log('info', '[Context] [SubContext] sub ponfar');
     }

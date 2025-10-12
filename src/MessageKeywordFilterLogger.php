@@ -4,39 +4,45 @@ declare(strict_types=1);
 
 namespace WyriHaximus\PSR3\Filter;
 
-use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
+use Stringable;
+use WyriHaximus\PSR3\Utils;
 
 use function stripos;
 
-final class MessageKeywordFilterLogger extends AbstractLogger
+final readonly class MessageKeywordFilterLogger implements LoggerInterface
 {
-    /** @var array<string> */
-    private array $keywords;
+    use LoggerTrait;
 
-    private LoggerInterface $logger;
-
-    /**
-     * @param array<string> $keywords
-     */
-    public function __construct(array $keywords, LoggerInterface $logger)
+    /** @param array<string> $keywords */
+    public function __construct(private array $keywords, private LoggerInterface $logger)
     {
-        $this->keywords = $keywords;
-        $this->logger   = $logger;
     }
 
     /**
+     * @param array<string, mixed> $context
+     *
      * @inheritDoc
      * @phpstan-ignore-next-line
      */
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
+        $message = (string) $message;
         foreach ($this->keywords as $keyword) {
-            if (stripos((string) $message, $keyword) !== false) {
+            if (stripos($message, $keyword) !== false) {
                 return;
             }
         }
 
-        $this->logger->log($level, $message, $context);
+        $level = Utils::formatValue($level);
+        Utils::checkCorrectLogLevel($level);
+
+        /** @phpstan-ignore psr3.interpolated */
+        $this->logger->log(
+            $level,
+            Utils::processPlaceHolders($message, $context),
+            $context,
+        );
     }
 }
