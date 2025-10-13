@@ -4,37 +4,48 @@ declare(strict_types=1);
 
 namespace WyriHaximus\PSR3\Filter;
 
-use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
+use Stringable;
+use WyriHaximus\PSR3\Utils;
 
-use function Safe\substr;
 use function strrpos;
+use function substr;
 use function trim;
 
-use const WyriHaximus\Constants\Numeric\ONE;
-
-final class ContextLoggerPrefixFilterLogger extends AbstractLogger
+final readonly class ContextLoggerPrefixFilterLogger implements LoggerInterface
 {
-    private LoggerInterface $logger;
+    use LoggerTrait;
 
-    public function __construct(LoggerInterface $logger)
+    private const int POSITION_PLUS_PLUS = 1;
+
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
+     * @param array<string, mixed> $context
+     *
      * @inheritDoc
      * @phpstan-ignore-next-line
      */
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         $message = (string) $message;
         $pos     = strrpos($message, ']');
         if ($pos !== false) {
-            $message = substr($message, $pos + ONE);
+            $message = substr($message, $pos + self::POSITION_PLUS_PLUS);
             $message = trim($message);
         }
 
-        $this->logger->log($level, $message, $context);
+        $level = Utils::formatValue($level);
+        Utils::checkCorrectLogLevel($level);
+
+        /** @phpstan-ignore psr3.interpolated */
+        $this->logger->log(
+            $level,
+            Utils::processPlaceHolders($message, $context),
+            $context,
+        );
     }
 }
