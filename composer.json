@@ -14,7 +14,7 @@
     "wyrihaximus/psr-3-utilities": "^2.3"
   },
   "require-dev": {
-    "wyrihaximus/makefiles": "^0.7.11",
+    "wyrihaximus/makefiles": "^0.7.12",
     "wyrihaximus/test-utilities": "^8.6.0"
   },
   "autoload": {
