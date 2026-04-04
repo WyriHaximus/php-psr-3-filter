@@ -13,6 +13,7 @@ use function strrpos;
 use function substr;
 use function trim;
 
+/** @api */
 final readonly class ContextLoggerPrefixFilterLogger implements LoggerInterface
 {
     use LoggerTrait;
@@ -24,10 +25,10 @@ final readonly class ContextLoggerPrefixFilterLogger implements LoggerInterface
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<mixed> $context
      *
      * @inheritDoc
-     * @phpstan-ignore-next-line
+     * @phpstan-ignore typeCoverage.paramTypeCoverage
      */
     public function log($level, string|Stringable $message, array $context = []): void
     {
@@ -44,6 +45,7 @@ final readonly class ContextLoggerPrefixFilterLogger implements LoggerInterface
         /** @phpstan-ignore psr3.interpolated */
         $this->logger->log(
             $level,
+            /** @phpstan-ignore argument.type */
             Utils::processPlaceHolders($message, $context),
             $context,
         );

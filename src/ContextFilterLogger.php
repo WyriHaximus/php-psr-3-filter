@@ -12,6 +12,7 @@ use WyriHaximus\PSR3\Utils;
 use function explode;
 use function in_array;
 
+/** @api */
 final readonly class ContextFilterLogger implements LoggerInterface
 {
     use LoggerTrait;
@@ -23,7 +24,7 @@ final readonly class ContextFilterLogger implements LoggerInterface
     /**
      * @param array<mixed> $values
      *
-     * @phpstan-ignore-next-line
+     * @phpstan-ignore ergebnis.noConstructorParameterWithDefaultValue
      */
     public function __construct(string $field, private array $values, private LoggerInterface $logger, private bool $exclude = true)
     {
@@ -31,13 +32,14 @@ final readonly class ContextFilterLogger implements LoggerInterface
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<mixed> $context
      *
      * @inheritDoc
-     * @phpstan-ignore-next-line
+     * @phpstan-ignore typeCoverage.paramTypeCoverage
      */
     public function log($level, string|Stringable $message, array $context = []): void
     {
+        /** @phpstan-ignore argument.type */
         $value = self::getField($context, $this->field);
         if ($value !== null && in_array($value, $this->values, true) === $this->exclude) {
             return;
@@ -49,6 +51,7 @@ final readonly class ContextFilterLogger implements LoggerInterface
         /** @phpstan-ignore psr3.interpolated */
         $this->logger->log(
             $level,
+            /** @phpstan-ignore argument.type */
             Utils::processPlaceHolders((string) $message, $context),
             $context,
         );
