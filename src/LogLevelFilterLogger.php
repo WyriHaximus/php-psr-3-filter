@@ -11,6 +11,7 @@ use WyriHaximus\PSR3\Utils;
 
 use function in_array;
 
+/** @api */
 final readonly class LogLevelFilterLogger implements LoggerInterface
 {
     use LoggerTrait;
@@ -21,10 +22,10 @@ final readonly class LogLevelFilterLogger implements LoggerInterface
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<mixed> $context
      *
      * @inheritDoc
-     * @phpstan-ignore-next-line
+     * @phpstan-ignore typeCoverage.paramTypeCoverage
      */
     public function log($level, string|Stringable $message, array $context = []): void
     {
@@ -38,6 +39,7 @@ final readonly class LogLevelFilterLogger implements LoggerInterface
         /** @phpstan-ignore psr3.interpolated */
         $this->logger->log(
             $level,
+            /** @phpstan-ignore argument.type */
             Utils::processPlaceHolders((string) $message, $context),
             $context,
         );
