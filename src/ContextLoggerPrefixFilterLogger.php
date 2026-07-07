@@ -28,7 +28,6 @@ final readonly class ContextLoggerPrefixFilterLogger implements LoggerInterface
      * @param array<mixed> $context
      *
      * @inheritDoc
-     * @phpstan-ignore typeCoverage.paramTypeCoverage
      */
     public function log($level, string|Stringable $message, array $context = []): void
     {
